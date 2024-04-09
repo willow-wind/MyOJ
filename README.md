@@ -1,4 +1,4 @@
-# yuoj-frontend
+# OPEP-frontend
 
 ## Project setup
 
