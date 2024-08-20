@@ -60,14 +60,9 @@ public class Question implements Serializable {
     private String judgeConfig;
 
     /**
-     * 点赞数
+     * 创建题目用户
      */
-    private Integer thumbNum;
-
-    /**
-     * 收藏数
-     */
-    private Integer favourNum;
+    private String userName;
 
     /**
      * 创建用户 id

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 题目提交封装类
+ * 题目提交封装类 view object
  * @TableName question
  */
 @Data

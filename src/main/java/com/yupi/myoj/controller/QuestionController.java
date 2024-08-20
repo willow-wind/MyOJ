@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.yupi.myoj.annotation.AuthCheck;
 import com.yupi.myoj.common.BaseResponse;
+import com.yupi.myoj.common.CommonResponse;
 import com.yupi.myoj.common.DeleteRequest;
 import com.yupi.myoj.common.ErrorCode;
 import com.yupi.myoj.common.ResultUtils;
@@ -14,6 +15,8 @@ import com.yupi.myoj.exception.ThrowUtils;
 import com.yupi.myoj.model.dto.question.*;
 import com.yupi.myoj.model.entity.Question;
 import com.yupi.myoj.model.entity.User;
+import com.yupi.myoj.model.enums.UserRoleEnum;
+import com.yupi.myoj.model.vo.QuestionManageVO;
 import com.yupi.myoj.model.vo.QuestionVO;
 import com.yupi.myoj.service.QuestionService;
 import com.yupi.myoj.service.UserService;
@@ -74,8 +77,6 @@ public class QuestionController {
         questionService.validQuestion(question, true);
         User loginUser = userService.getLoginUser(request);
         question.setUserId(loginUser.getId());
-        question.setFavourNum(0);
-        question.setThumbNum(0);
         boolean result = questionService.save(question);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         long newQuestionId = question.getId();
@@ -162,20 +163,36 @@ public class QuestionController {
         return ResultUtils.success(questionService.getQuestionVO(question, request));
     }
 
+//    /**
+//     * 分页获取列表（仅管理员）
+//     *
+//     * @param questionQueryRequest
+//     * @return
+//     */
+//    @PostMapping("/list/page")
+//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+//    public BaseResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
+//        long current = questionQueryRequest.getCurrent();
+//        long size = questionQueryRequest.getPageSize();
+//        Page<Question> questionPage = questionService.page(new Page<>(current, size),
+//                questionService.getQueryWrapper(questionQueryRequest));
+//        return ResultUtils.success(questionPage);
+//    }
+
     /**
-     * 分页获取列表（仅管理员）
+     * 分页获取题目列表（仅管理员）
      *
-     * @param questionQueryRequest
-     * @return
+     * @param questionQueryRequest 题目查询请求
+     * @return {@link CommonResponse}<{@link Page}<{@link Question}>>
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
+    public CommonResponse<Page<QuestionManageVO>> listManageQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
-        Page<Question> questionPage = questionService.page(new Page<>(current, size),
-                questionService.getQueryWrapper(questionQueryRequest));
-        return ResultUtils.success(questionPage);
+        return CommonResponse.success(
+                questionService.listManageQuestionByPage(new Page<>(current, size), questionService.getQueryWrapper(questionQueryRequest))
+        );
     }
 
     /**
@@ -220,8 +237,6 @@ public class QuestionController {
                 questionService.getQueryWrapper(questionQueryRequest));
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
     }
-
-    // endregion
 
     /**
      * 编辑（用户）

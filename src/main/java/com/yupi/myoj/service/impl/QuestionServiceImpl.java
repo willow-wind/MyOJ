@@ -1,20 +1,25 @@
 package com.yupi.myoj.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yupi.myoj.common.ErrorCode;
 import com.yupi.myoj.constant.CommonConstant;
 import com.yupi.myoj.exception.BusinessException;
 import com.yupi.myoj.exception.ThrowUtils;
+import com.yupi.myoj.model.dto.question.JudgeConfig;
 import com.yupi.myoj.model.dto.question.QuestionQueryRequest;
 import com.yupi.myoj.model.entity.*;
+import com.yupi.myoj.model.vo.QuestionManageVO;
 import com.yupi.myoj.model.vo.QuestionVO;
 import com.yupi.myoj.model.vo.UserVO;
 import com.yupi.myoj.service.QuestionService;
 import com.yupi.myoj.mapper.QuestionMapper;
 import com.yupi.myoj.service.UserService;
+import com.yupi.myoj.utils.CopyUtil;
 import com.yupi.myoj.utils.SqlUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +28,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -64,8 +70,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         String answer = question.getAnswer();
         String judgeCase = question.getJudgeCase();
         String judgeConfig = question.getJudgeConfig();
-        Integer thumbNum = question.getThumbNum();
-        Integer favourNum = question.getFavourNum();
         Long userId = question.getUserId();
         Date createTime = question.getCreateTime();
         Date updateTime = question.getUpdateTime();
@@ -175,6 +179,31 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         return questionVOPage;
     }
 
+    @Override
+    public Page<QuestionManageVO> listManageQuestionByPage(Page<Question> questionPage, QueryWrapper<Question> queryWrapper) {
+        this.page(questionPage, queryWrapper);
+        Page<QuestionManageVO> questionManageVoPage = new Page<>();
+        BeanUtils.copyProperties(questionPage, questionManageVoPage, "records");
+        List<Long> userIdList = questionPage.getRecords().stream().map(Question::getUserId).collect(Collectors.toList());
+        List<User> userList = userService.list(
+                Wrappers.lambdaQuery(User.class).select(User::getUserName, User::getId).in(User::getId, userIdList)
+        );
+        Map<Long, List<User>> userIdToName = userList.stream().collect(Collectors.groupingBy(User::getId));
+        questionManageVoPage.setRecords(
+                questionPage.getRecords().stream().map(question -> {
+                    QuestionManageVO questionManageVO = CopyUtil.copy(question, QuestionManageVO.class);
+                    if (userIdToName.containsKey(question.getUserId())) {
+                        questionManageVO.setUserName(userIdToName.get(question.getUserId()).get(0).getUserName());
+                    }
+                    JudgeConfig judgeConfig = JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class);
+                    questionManageVO.setTimeLimit(judgeConfig.getTimeLimit());
+                    questionManageVO.setMemoryLimit(judgeConfig.getMemoryLimit());
+                    questionManageVO.setStackLimit(judgeConfig.getStackLimit());
+                    return questionManageVO;
+                }).collect(Collectors.toList())
+        );
+        return questionManageVoPage;
+    }
 }
 
 

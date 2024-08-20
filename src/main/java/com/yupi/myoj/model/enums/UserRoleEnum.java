@@ -3,14 +3,19 @@ package com.yupi.myoj.model.enums;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * 用户角色枚举
  *
  * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * &#064;from  <a href="https://yupi.icu">编程导航知识星球</a>
  */
+@Getter
 public enum UserRoleEnum {
 
     USER("用户", "user"),
@@ -19,6 +24,8 @@ public enum UserRoleEnum {
 
     private final String text;
 
+    @EnumValue
+    @JsonValue
     private final String value;
 
     UserRoleEnum(String text, String value) {
@@ -53,11 +60,4 @@ public enum UserRoleEnum {
         return null;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getText() {
-        return text;
-    }
 }

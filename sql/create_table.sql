@@ -34,12 +34,12 @@ create table if not exists question
     acceptedNum int      default 0                 not null comment '题目通过数',
     judgeCase   text                               null comment '判题用例（json数组）',
     judgeConfig text                               null comment '判题配置（json对象）',
-    thumbNum    int      default 0                 not null comment '点赞数',
-    favourNum   int      default 0                 not null comment '收藏数',
+    userName    varchar(256)                       null comment '用户昵称',
     userId      bigint                             not null comment '创建用户 id',
     createTime  datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime  datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete    tinyint  default 0                 not null comment '是否删除',
+    foreign key (userId) references user(id),
     index idx_userId (userId)
 ) comment '题目' collate = utf8mb4_unicode_ci;
 
@@ -56,6 +56,7 @@ create table if not exists question_submit
     createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete   tinyint  default 0                 not null comment '是否删除',
+    foreign key (questionId) references question(id),
     index idx_questionId (questionId),
     index idx_userId (userId)
 ) comment '题目提交';
@@ -74,6 +75,7 @@ create table if not exists post
     createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete   tinyint  default 0                 not null comment '是否删除',
+    foreign key (userId) references user(id),
     index idx_userId (userId)
 ) comment '帖子' collate = utf8mb4_unicode_ci;
 
@@ -85,6 +87,7 @@ create table if not exists post_thumb
     userId     bigint                             not null comment '创建用户 id',
     createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    foreign key (postId) references post(id),
     index idx_postId (postId),
     index idx_userId (userId)
 ) comment '帖子点赞';
@@ -97,6 +100,7 @@ create table if not exists post_favour
     userId     bigint                             not null comment '创建用户 id',
     createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    foreign key (postId) references post(id),
     index idx_postId (postId),
     index idx_userId (userId)
 ) comment '帖子收藏';
