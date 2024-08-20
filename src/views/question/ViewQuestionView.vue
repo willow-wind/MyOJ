@@ -50,6 +50,7 @@
             >
               <a-option>java</a-option>
               <a-option>cpp</a-option>
+              <a-option>python</a-option>
               <a-option>go</a-option>
               <a-option>html</a-option>
             </a-select>
@@ -64,13 +65,22 @@
         <a-button type="primary" style="min-width: 200px" @click="doSubmit">
           提交代码
         </a-button>
+        <a-divider size="0" direction="vertical" />
+        <a-button
+          status="success"
+          @click="toSeeCodePage"
+          type="primary"
+          style="min-width: 200px"
+        >
+          代码可视化
+        </a-button>
       </a-col>
     </a-row>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect, withDefaults, defineProps } from "vue";
+import { onMounted, ref, watch, withDefaults, defineProps, toRaw } from "vue";
 import {
   Question,
   QuestionControllerService,
@@ -80,7 +90,11 @@ import {
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import CodeEditor from "@/components/CodeEditor.vue";
+import * as monaco from "monaco-editor";
 import MdViewer from "@/components/MdViewer.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 interface Props {
   id: string;
@@ -136,6 +150,12 @@ onMounted(() => {
 
 const changeCode = (value: string) => {
   form.value.code = value;
+};
+
+const toSeeCodePage = () => {
+  router.push({
+    path: `/view/question/seeCode`,
+  });
 };
 </script>
 

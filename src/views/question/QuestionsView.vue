@@ -34,7 +34,9 @@
       <template #acceptedRate="{ record }">
         {{
           `${
-            record.submitNum ? record.acceptedNum / record.submitNum : "0"
+            record.submitNum
+              ? (record.acceptedNum / record.submitNum) * 100
+              : "0"
           }% (${record.acceptedNum}/${record.submitNum})`
         }}
       </template>
@@ -72,7 +74,7 @@ const total = ref(0);
 const searchParams = ref<QuestionQueryRequest>({
   title: "",
   tags: [],
-  pageSize: 2,
+  pageSize: 5,
   current: 1,
 });
 

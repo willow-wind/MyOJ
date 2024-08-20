@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <template v-if="route.path.startsWith('/user')">
-      <router-view />
+      <Transition name="fade">
+        <router-view />
+      </Transition>
     </template>
     <template v-else>
       <BasicLayout />
@@ -11,6 +13,15 @@
 
 <style>
 #app {
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
 <script setup lang="ts">

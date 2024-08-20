@@ -12,8 +12,8 @@
           disabled
         >
           <div class="title-bar">
-            <img class="logo" src="../assets/logo.png" />
-            <div class="title">我的OJ</div>
+            <img class="logo" src="../assets/nankai2.jpg" />
+            <div class="title">遥岑编程</div>
           </div>
         </a-menu-item>
         <a-menu-item v-for="item in visibleRoutes" :key="item.path">
@@ -166,8 +166,11 @@ const loginUserInfo: LoginUserVO = computed(
 }
 
 .title {
-  color: #444;
+  font-size: 24px; /* 字体大小 */
+  color: #ffff99; /* 字体颜色 */
   margin-left: 16px;
+  font-weight: bold; /* 加粗 */
+  text-shadow: 2px 2px 4px #000000; /* 阴影效果，参数分别为：水平偏移、垂直偏移、模糊半径、颜色 */
 }
 
 .logo {

@@ -3,8 +3,8 @@
     <a-layout style="min-height: 100vh">
       <a-layout-header class="header">
         <a-space>
-          <img src="../assets/logo.png" class="logo" />
-          <div>我的OJ</div>
+          <img src="../assets/nankai2.jpg" class="logo" />
+          <div class="title">遥岑编程</div>
         </a-space>
       </a-layout-header>
       <a-layout-content class="content">
@@ -18,6 +18,14 @@
 </template>
 
 <style scoped>
+.title {
+  font-size: 24px; /* 字体大小 */
+  color: #ffff99; /* 字体颜色 */
+  margin-left: 16px;
+  font-weight: bold; /* 加粗 */
+  text-shadow: 2px 2px 4px #000000; /* 阴影效果，参数分别为：水平偏移、垂直偏移、模糊半径、颜色 */
+}
+
 #userLayout {
   text-align: center;
   background: url("https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png")

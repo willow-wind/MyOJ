@@ -19,7 +19,8 @@
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "vditor": "^3.10.3"
   },
   "devDependencies": {
     "@arco-design/web-vue": "^2.49.1",

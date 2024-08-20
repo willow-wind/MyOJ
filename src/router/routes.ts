@@ -10,6 +10,8 @@ import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
+import PostView from "@/views/post/PostView.vue";
+import VisualizeCodeView from "@/views/question/VisualizeCodeView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -77,6 +79,12 @@ export const routes: Array<RouteRecordRaw> = [
     name: "主页",
     component: QuestionsView,
   },
+  {
+    name: "发帖讨论",
+    path: "/post/create",
+    component: PostView,
+    meta: { access: ACCESS_ENUM.USER },
+  },
   // {
   //   path: "/hide",
   //   name: "隐藏页面",
@@ -85,6 +93,16 @@ export const routes: Array<RouteRecordRaw> = [
   //     hideInMenu: true,
   //   },
   // },
+  {
+    path: "/view/question/seeCode",
+    name: "可视化代码",
+    component: VisualizeCodeView,
+    props: true,
+    meta: {
+      access: ACCESS_ENUM.USER,
+      hideInMenu: true,
+    },
+  },
   {
     path: "/noAuth",
     name: "无权限",
